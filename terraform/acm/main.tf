@@ -3,10 +3,6 @@ locals {
   use_existing_route53_zone = true
 }
 
-variable "domain_name" {
-  type        = string
-  description = "Domain name"
-}
 data "aws_route53_zone" "this" {
   count = local.use_existing_route53_zone ? 1 : 0
 
@@ -21,7 +17,7 @@ resource "aws_route53_zone" "this" {
 
 module "acm" {
   source = "terraform-aws-modules/acm/aws"
-
+  version = "v3.3.0"
   domain_name = var.domain_name
   zone_id     = coalescelist(data.aws_route53_zone.this.*.zone_id, aws_route53_zone.this.*.zone_id)[0]
 
